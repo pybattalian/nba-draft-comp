@@ -156,6 +156,54 @@ h2.sub2{font-size:22px;margin-top:4px}
 .lad.banter td.nx small{font-size:12px;color:var(--muted)}
 .lad.banter td.dig{min-width:200px;max-width:260px;font-style:italic;font-size:13px}
 .lad.banter td.sq b{display:block;font-family:var(--display);font-size:20px}
+/* Phone layouts */
+.mob{display:none}
+@media (max-width:700px){
+ .dsk{display:none}.mob{display:block}
+ .mrow{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin-bottom:8px}
+ .mrow.lead{border-color:var(--accent)}
+ .mrow summary{display:grid;grid-template-columns:28px auto 1fr auto;align-items:center;gap:10px;padding:12px 14px;list-style:none;cursor:pointer}
+ .mrow summary::-webkit-details-marker{display:none}
+ .mpos{font-family:var(--display);font-weight:800;font-size:26px;color:var(--muted);text-align:center}
+ .mrow.lead .mpos,.mrow.lead .mtot{color:var(--accent)}
+ .mname{font-family:var(--display);font-weight:700;font-size:22px;text-transform:uppercase}
+ .mbar{height:6px;border-radius:3px;background:var(--bg);min-width:30px}
+ .mbar i{display:block;height:100%;border-radius:3px;background:var(--accent);opacity:.55}
+ .mtot{font-family:var(--display);font-weight:800;font-size:30px;font-variant-numeric:tabular-nums}
+ .mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 12px 12px}
+ .mc{background:var(--bg);border-radius:8px;padding:6px 8px;display:flex;flex-direction:column}
+ .mc span{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+ .mc b{font-size:15px;font-variant-numeric:tabular-nums}
+ .mc i{font-style:normal;font-size:12px;font-weight:700;color:var(--muted)}
+ .mc.hit i{color:var(--ink)}.mc.top i{color:var(--accent)}
+ .mhint{color:var(--muted);font-size:13px}
+ .mcard{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:10px}
+ .mhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+ .mhead b{font-family:var(--display);font-size:22px;text-transform:uppercase}
+ .mhead span{color:var(--muted);font-weight:600;font-size:14px}
+ .mteams{display:flex;gap:14px;margin-bottom:8px}
+ .mteam{display:flex;align-items:center;gap:6px}
+ .mteam small{font-size:12px;color:var(--muted)}
+ .mpl{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:13px}
+ .mpl th{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);text-align:right;padding:2px 3px}
+ .mpl td{text-align:right;padding:4px 3px;border-top:1px solid var(--line)}
+ .mpl td.ms{text-align:left;font-family:var(--display);font-weight:700;color:var(--accent);width:28px}
+ .mpl td.mp{text-align:left;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:110px}
+ .mpl tr.mavg td{font-weight:700;border-top:2px solid var(--line)}
+ .mgh{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:14px 0 6px}
+ .mrank{list-style:none;margin:0;padding:0}
+ .mrank li{display:grid;grid-template-columns:22px 1fr auto 34px;gap:8px;padding:5px 0;border-top:1px solid var(--line);font-variant-numeric:tabular-nums;font-size:14px}
+ .mrank li:first-child{border-top:0}
+ .mrank .rp{color:var(--muted);font-weight:700}.mrank .rn{font-weight:600}.mrank .rn small{color:var(--muted)}
+ .mrank .rpt{text-align:right;font-weight:700}
+ .mrank li.top .rn,.mrank li.top .rpt{color:var(--accent)}
+ .fanm .mhead{justify-content:flex-start}
+ .fanm .mhead small{display:block;color:var(--muted);font-size:12px}
+ .fanm h4{font-size:16px;margin:4px 0}
+ .fanm p{margin:0 0 6px;color:var(--muted);font-size:14px}
+ .fanm a{color:var(--accent);font-size:13px;font-weight:600}
+ .fanm .dig{font-style:italic;color:var(--ink);border-left:3px solid var(--accent);padding-left:10px;margin-top:10px}
+}
 footer{color:var(--muted);font-size:13px;padding-block:0 30px}
 @media (min-width:860px){.ladder{grid-template-columns:1fr 1fr}}
 @media (prefers-reduced-motion:no-preference){.row{transition:transform .15s}.row:hover{transform:translateY(-1px)}}
@@ -182,7 +230,7 @@ footer{color:var(--muted);font-size:13px;padding-block:0 30px}
   </section>
   <section id="squads" hidden>
     <h2>Squads</h2>
-    <p class="note">Teams then players, in ladder order. <span class="mi" style="margin:0">MI</span> marks the Most Improved team. Player lines are per game: Pts · Reb · Ast · Stl · Blk. Swipe sideways on a phone.</p>
+    <p class="note">Teams then players, in ladder order. <span class="mi" style="margin:0">MI</span> marks the Most Improved team. Player lines are per game: Pts · Reb · Ast · Stl · Blk.</p>
     <div id="squadList"></div>
   </section>
   <section id="categories" hidden>
@@ -373,6 +421,26 @@ function render(){
   document.getElementById("catList").innerHTML=`<div class="board"><table class="lad cats">
    <thead><tr><th class="nm">Category</th>${["1st","2nd","3rd","4th","5th","6th"].map((x,i)=>`<th class="${i===0?"gs":""}">${x}</th>`).join("")}</tr></thead>
    <tbody>${cgroups.map(g=>`<tr class="gh"><td colspan="7">${g.g}</td></tr>`+g.cs.map(crow).join("")).join("")}</tbody></table></div>`;
+  // ---- phone layouts (desktop tables are hidden under 700px) ----
+  const wrapD=(id,m)=>{const el=document.getElementById(id);el.innerHTML=`<div class="dsk">${el.innerHTML}</div><div class="mob">${m}</div>`;};
+  let mp=0,mprev=null;
+  wrapD("ladderList",order.map((s,i)=>{
+    if(mprev===null||Math.abs(s.total-mprev)>1e-9){mp=i+1;mprev=s.total;}
+    const cells=OC.map(c=>{const r=R[c.k][s.n];const top=r.place===1&&r.pts>0;
+      return `<div class="mc${r.pts>0?" hit":""}${top?" top":""}"><span>${c.s}</span><b>${c.fmt(s[c.k])}</b><i>${r.pts>0?"+"+f1(r.pts):"–"}</i></div>`;}).join("");
+    return `<details class="mrow${mp===1?" lead":""}"><summary><span class="mpos">${mp}</span><span class="mname">${esc(s.n)}</span><span class="mbar"><i style="width:${(s.total/maxT*100).toFixed(1)}%"></i></span><span class="mtot">${f1(s.total)}</span></summary><div class="mgrid">${cells}</div></details>`;
+  }).join("")+`<p class="mhint">Tap a name to see where the points come from.</p>`);
+  wrapD("squadList",order.map(s=>{const d=SQUADS.find(x=>x.n===s.n);
+    const teams=s.teams.map(t=>`<div class="mteam">${logo(t.a)}<small>${t.a===d.mi?`<span class="mi" style="margin:0">MI</span> `:""}${t.proj?`${f1(t.w)} W`:`${t.w}–${t.l}`}</small></div>`).join("");
+    const pl=["PG","SG","SF","PF","C","SIXTH"].map(k=>{const p=s.pl.find(x=>x.slot===k);if(!p)return"";
+      return `<tr><td class="ms">${SLOTN[k]}</td><td class="mp">${esc(lastName(p.name))}</td>${[p.pts,p.reb,p.ast,p.stl,p.blk].map(v=>`<td>${v.toFixed(1)}</td>`).join("")}</tr>`;}).join("");
+    return `<div class="mcard"><div class="mhead"><b>${esc(s.n)}</b><span>${f1(s.total)} pts</span></div><div class="mteams">${teams}</div>
+      <table class="mpl"><tr><th></th><th></th><th>Pts</th><th>Reb</th><th>Ast</th><th>Stl</th><th>Blk</th></tr>${pl}
+      <tr class="mavg"><td></td><td class="mp">Average</td>${[s.pts,s.reb,s.ast,s.stl,s.blk].map(v=>`<td>${v.toFixed(2)}</td>`).join("")}</tr></table></div>`;}).join(""));
+  wrapD("catList",cgroups.map(g=>`<div class="mgh">${g.g}</div>`+g.cs.map(c=>{const ranked=[...S].sort((x,y)=>y[c.k]-x[c.k]);
+    return `<div class="mcard"><div class="mhead"><b>${c.l}</b><span>${c.sc.join(" / ")}</span></div><ol class="mrank">${ranked.map(s=>{const r=R[c.k][s.n];
+      return `<li class="${r.place===1&&r.pts>0?"top":""}"><span class="rp">${r.place}</span><span class="rn">${esc(s.n)}${c.k==="mi"?` <small>${s.miT.a}</small>`:""}</span><span class="rv">${c.fmt(s[c.k])}</span><span class="rpt">${r.pts>0?"+"+f1(r.pts):""}</span></li>`;}).join("")}</ol></div>`;}).join("")).join(""));
+
 }
 function renderRules(){
   const blocks=[
@@ -425,6 +493,14 @@ function renderBanter(){
   document.getElementById("fanList").innerHTML=`<div class="board"><table class="lad banter">
    <thead><tr><th class="nm">Drafter</th><th class="gs">Team</th><th class="gs">Latest</th><th class="gs">Next game (NZ)</th><th class="gs">The dig</th></tr></thead>
    <tbody>${frows}</tbody></table></div>`;
+  const fel=document.getElementById("fanList");
+  fel.innerHTML=`<div class="dsk">${fel.innerHTML}</div><div class="mob">${NEWS.fans.map(f=>{
+    const live=LIVE&&LIVE.teams&&LIVE.teams[f.team];
+    const rec=live&&((live.w||0)+(live.l||0))?`${live.w}–${live.l}`:"0–0";
+    return `<div class="mcard fanm"><div class="mhead">${logo(f.team,"big")}<div><b>${esc(f.who)}</b><small>${rec} · last season ${f.last}</small></div></div>
+      <h4>${esc(f.h)}</h4><p>${esc(f.b)}</p><a href="${f.url}" target="_blank" rel="noopener">${esc(f.src)} →</a>
+      <div class="next"><b>Next: ${esc(f.next)}</b>${esc(f.when)}</div><p class="dig">${esc(f.dig)}</p></div>`;}).join("")}</div>`;
+
 }
 renderRules();renderDraft();renderBanter();render();
 </script></body></html>
