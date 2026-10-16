@@ -203,14 +203,14 @@ const NEWS={
  ]};
 const CATS=[
  {k:"pts",l:"Points",sc:[3,2,1],desc:"Average points per game across your six players.",fmt:v=>v.toFixed(2),pl:1},
- {k:"wins",l:"Wins",sc:[5,3,1],desc:"Total regular-season wins across your three teams.",fmt:v=>v.toFixed(0)},
- {k:"mi",l:"Most Improved",sc:[5,3,1],desc:"Change in win % for your declared team on last season. If you declare none, your last team picked counts.",fmt:v=>(v>=0?"+":"")+(v*100).toFixed(1)+"%"},
- {k:"po",l:"Playoffs",sc:[5,3,1],desc:"Playoff points across your three teams: champion 10, conference winner 7, conference semi winner 5, first-round winner 3, made playoffs 1.",fmt:v=>v.toFixed(0),needPos:true},
- {k:"cup",l:"NBA Cup",sc:[3,1],desc:"NBA Cup points across your teams: winner 10, finals loser 7, semi-final loser 4.",fmt:v=>v.toFixed(0),needPos:true},
  {k:"reb",l:"Rebounds",sc:[3,2,1],desc:"Average rebounds per game across your six players.",fmt:v=>v.toFixed(2),pl:1},
  {k:"ast",l:"Assists",sc:[3,2,1],desc:"Average assists per game across your six players.",fmt:v=>v.toFixed(2),pl:1},
  {k:"stl",l:"Steals",sc:[3,2,1],desc:"Average steals per game across your six players.",fmt:v=>v.toFixed(2),pl:1},
- {k:"blk",l:"Blocks",sc:[3,2,1],desc:"Average blocks per game across your six players.",fmt:v=>v.toFixed(2),pl:1}
+ {k:"blk",l:"Blocks",sc:[3,2,1],desc:"Average blocks per game across your six players.",fmt:v=>v.toFixed(2),pl:1},
+ {k:"wins",l:"Wins",sc:[5,3,1],desc:"Total regular-season wins across your three teams.",fmt:v=>v.toFixed(0)},
+ {k:"mi",l:"Most Improved",sc:[5,3,1],desc:"Change in win % for your declared team on last season. If you declare none, your last team picked counts.",fmt:v=>(v>=0?"+":"")+(v*100).toFixed(1)+"%"},
+ {k:"po",l:"Playoffs",sc:[5,3,1],desc:"Playoff points across your three teams: champion 10, conference winner 7, conference semi winner 5, first-round winner 3, made playoffs 1.",fmt:v=>v.toFixed(0),needPos:true},
+ {k:"cup",l:"NBA Cup",sc:[3,1],desc:"NBA Cup points across your teams: winner 10, finals loser 7, semi-final loser 4.",fmt:v=>v.toFixed(0),needPos:true}
 ];
 const PO={CHAMP:10,F:7,CF:5,R2:3,R1:1};
 const CUP={WIN:10,F:7,SF:4};
