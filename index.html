@@ -81,6 +81,22 @@ tr.avg td{font-weight:700;border-top:2px solid var(--line)}
 .rounds{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:12px}
 .kind{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);width:46px}
 tr.dim td{opacity:.3}
+.topstory{background:var(--ink);color:var(--bg);border-radius:12px;padding:16px 18px;margin:0 0 14px}
+.topstory .lbl{color:var(--accent);margin-top:0}
+.topstory h3{font-family:var(--display);font-size:clamp(24px,5vw,32px);line-height:1.05;text-transform:uppercase;margin:4px 0 8px;text-wrap:balance}
+.topstory p{margin:0 0 8px;max-width:70ch;opacity:.85}
+.topstory a{color:var(--accent);font-weight:600}
+.feeds{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:12px;margin:0 0 22px}
+.feed{max-height:520px;overflow:auto}
+.feed .btn{display:inline-block;margin-top:6px;font-weight:700;color:var(--accent);text-decoration:none}
+.fan .rec{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 8px}
+.fan h4{font-size:17px;margin:8px 0 4px;line-height:1.25}
+.fan p{margin:0 0 6px;color:var(--muted);font-size:14px}
+.fan .dig{font-style:italic;color:var(--ink);border-left:3px solid var(--accent);padding-left:10px;margin-top:10px}
+.fan a{color:var(--accent);font-size:13px;font-weight:600}
+.next{background:var(--bg);border-radius:8px;padding:8px 10px;margin-top:8px;font-size:14px}
+.next b{display:block}
+h2.sub2{font-size:22px;margin-top:4px}
 footer{color:var(--muted);font-size:13px;padding-block:0 30px}
 @media (min-width:860px){.ladder{grid-template-columns:1fr 1fr}}
 @media (prefers-reduced-motion:no-preference){.row{transition:transform .15s}.row:hover{transform:translateY(-1px)}}
@@ -97,6 +113,7 @@ footer{color:var(--muted);font-size:13px;padding-block:0 30px}
   <a href="#categories" data-tab="categories">Categories</a>
   <a href="#draft" data-tab="draft">Draft picks</a>
   <a href="#rules" data-tab="rules">Points system</a>
+  <a href="#banter" data-tab="banter">Give the boys shit</a>
 </div></nav>
 <main class="wrap">
   <section id="ladder">
@@ -120,6 +137,17 @@ footer{color:var(--muted);font-size:13px;padding-block:0 30px}
     <div class="filters" id="draftFilter"></div>
     <div class="rounds" id="draftList"></div>
   </section>
+  <section id="banter" hidden>
+    <h2>Give the boys shit</h2>
+    <p class="note" id="banterNote"></p>
+    <div class="topstory" id="topStory"></div>
+    <div class="feeds">
+      <div class="card feed"><div class="lbl" style="margin-top:0">Shams Charania</div><a class="twitter-timeline" data-height="440" data-dnt="true" href="https://twitter.com/ShamsCharania">Posts by @ShamsCharania</a><a class="btn" href="https://x.com/ShamsCharania" target="_blank" rel="noopener">Open @ShamsCharania on X →</a></div>
+      <div class="card feed"><div class="lbl" style="margin-top:0">Marc Stein</div><a class="twitter-timeline" data-height="440" data-dnt="true" href="https://twitter.com/TheSteinLine">Posts by @TheSteinLine</a><a class="btn" href="https://x.com/TheSteinLine" target="_blank" rel="noopener">Open @TheSteinLine on X →</a></div>
+    </div>
+    <h2 class="sub2">The boys' teams</h2>
+    <div class="grid" id="fanList"></div>
+  </section>
   <section id="rules" hidden>
     <h2>Points system</h2>
     <p class="note">Nine categories. Points are awarded on the final standings in each one, and ties split the points on offer.</p>
@@ -133,6 +161,50 @@ const LIVE_DATA=null;
 const SQUADS=[{"n":"Marto","mi":"DAL","dec":false,"t":[["HOU",12],["TOR",25],["DAL",49]],"p":[["PG","Tyrese Haliburton","IND",36,3.8,10.1,1.5,0.6,19.5],["SG","Shai Gilgeous-Alexander","OKC",13,4.3,6.6,1.4,0.8,31.1],["SF","Lauri Markkanen","UTA",37,6.9,2.1,1,0.5,26.7],["PF","Jayson Tatum","BOS",24,10,5.3,1.4,0.2,21.8],["C","Nikola Jokić","DEN",1,12.9,10.7,1.4,0.8,27.7],["SIXTH","Kawhi Leonard","TOR",48,6.4,3.6,1.9,0.4,27.9]]},{"n":"Pete","mi":"DET","dec":false,"t":[["OKC",2],["BOS",11],["DET",14]],"p":[["PG","LaMelo Ball","MIN",38,4.8,7.1,1.2,0.2,20.1],["SG","Dyson Daniels","ATL",50,6.8,5.9,2,0.4,11.9],["SF","Josh Hart","NYK",47,7.4,4.8,1.1,0.3,12],["PF","Evan Mobley","CLE",35,9,3.6,0.7,1.7,18.2],["C","Alperen Şengün","HOU",23,8.9,6.2,1.2,1.1,20.4],["SIXTH","Jalen Duren","DET",26,10.5,2,0.8,0.8,19.5]]},{"n":"Matt","mi":"UTA","dec":true,"t":[["SAS",3],["PHI",10],["UTA",27]],"p":[["PG","Giannis Antetokounmpo","MIA",15,9.8,5.4,0.9,0.7,27.6],["SG","Scottie Barnes","TOR",22,7.5,5.9,1.4,1.5,18.1],["SF","Ausar Thompson","DET",34,5.7,3.1,2,0.9,9.9],["PF","Chet Holmgren","OKC",39,8.9,1.7,0.6,1.9,17.1],["C","Walker Kessler","LAL",46,10.8,3,1.4,1.8,14.4],["SIXTH","Rudy Gobert","MIN",51,11.5,1.7,0.8,1.6,10.9]]},{"n":"Ross","mi":"WAS","dec":true,"t":[["CLE",40],["WAS",45],["LAL",52]],"p":[["PG","Luka Dončić","LAL",9,7.7,8.3,1.6,0.5,33.5],["SG","Cade Cunningham","DET",16,5.5,9.9,1.4,0.8,23.9],["SF","Jalen Johnson","ATL",21,10.3,7.9,1.2,0.4,22.5],["PF","Paolo Banchero","ORL",28,8.4,5.2,0.7,0.6,22.2],["C","Victor Wembanyama","SAS",4,11.5,3.1,1,3.1,25],["SIXTH","Amen Thompson","HOU",33,7.8,5.3,1.5,0.6,18.3]]},{"n":"Jayden","mi":"MIA","dec":false,"t":[["NYK",5],["DEN",8],["MIA",17]],"p":[["PG","Jamal Murray","DEN",32,4.4,7.1,0.9,0.4,25.4],["SG","Jalen Brunson","NYK",29,3.3,6.8,0.8,0.1,26],["SF","LeBron James","PHI",44,6.1,7.2,1.2,0.6,20.9],["PF","Karl-Anthony Towns","NYK",20,11.9,3,0.9,0.5,20.1],["C","Domantas Sabonis","SAC",41,11.4,4.1,0.9,0.2,15.8],["SIXTH","Tyrese Maxey","PHI",53,4.1,6.6,1.9,0.8,28.3]]},{"n":"Pat","mi":"IND","dec":true,"t":[["IND",7],["MIN",19],["ORL",54]],"p":[["PG","Donovan Mitchell","CLE",18,4.5,5.7,1.5,0.3,27.9],["SG","Anthony Edwards","MIN",6,5,3.7,1.4,0.8,28.8],["SF","Cooper Flagg","DAL",30,6.7,4.5,1.2,0.9,21],["PF","Pascal Siakam","IND",31,6.6,3.8,1.1,0.4,24],["C","Bam Adebayo","MIA",42,10,3.2,1.2,0.7,20.1],["SIXTH","Franz Wagner","ORL",43,5.2,3.3,0.9,0.3,20.6]]}];
 const NBA={"OKC":["Oklahoma City Thunder",64,62.5],"SAS":["San Antonio Spurs",62,59.5],"NYK":["New York Knicks",53,52.5],"BOS":["Boston Celtics",56,51.5],"PHI":["Philadelphia 76ers",45,50.5],"DEN":["Denver Nuggets",54,49.5],"DET":["Detroit Pistons",60,49.5],"HOU":["Houston Rockets",52,48.5],"MIN":["Minnesota Timberwolves",49,48.5],"CLE":["Cleveland Cavaliers",52,47.5],"LAL":["Los Angeles Lakers",53,46.5],"TOR":["Toronto Raptors",46,46.5],"MIA":["Miami Heat",43,46.5],"IND":["Indiana Pacers",19,43.5],"ATL":["Atlanta Hawks",46,43.5],"ORL":["Orlando Magic",45,43.5],"POR":["Portland Trail Blazers",42,41.5],"PHX":["Phoenix Suns",45,40.5],"CHA":["Charlotte Hornets",44,39.5],"GSW":["Golden State Warriors",37,37.5],"UTA":["Utah Jazz",22,37.5],"DAL":["Dallas Mavericks",26,34.5],"WAS":["Washington Wizards",17,34.5],"CHI":["Chicago Bulls",31,29.5],"MEM":["Memphis Grizzlies",25,29.5],"LAC":["Los Angeles Clippers",42,28.5],"NOP":["New Orleans Pelicans",26,28.5],"MIL":["Milwaukee Bucks",32,25.5],"BKN":["Brooklyn Nets",20,24.5],"SAC":["Sacramento Kings",22,21.5]};
 const DRAFT=[[1,"Marto","P","Nikola Jokić"],[2,"Pete","T","OKC"],[3,"Matt","T","SAS"],[4,"Ross","P","Victor Wembanyama"],[5,"Jayden","T","NYK"],[6,"Pat","P","Anthony Edwards"],[7,"Pat","T","IND"],[8,"Jayden","T","DEN"],[9,"Ross","P","Luka Dončić"],[10,"Matt","T","PHI"],[11,"Pete","T","BOS"],[12,"Marto","T","HOU"],[13,"Marto","P","Shai Gilgeous-Alexander"],[14,"Pete","T","DET"],[15,"Matt","P","Giannis Antetokounmpo"],[16,"Ross","P","Cade Cunningham"],[17,"Jayden","T","MIA"],[18,"Pat","P","Donovan Mitchell"],[19,"Pat","T","MIN"],[20,"Jayden","P","Karl-Anthony Towns"],[21,"Ross","P","Jalen Johnson"],[22,"Matt","P","Scottie Barnes"],[23,"Pete","P","Alperen Şengün"],[24,"Marto","P","Jayson Tatum"],[25,"Marto","T","TOR"],[26,"Pete","P","Jalen Duren"],[27,"Matt","T","UTA"],[28,"Ross","P","Paolo Banchero"],[29,"Jayden","P","Jalen Brunson"],[30,"Pat","P","Cooper Flagg"],[31,"Pat","P","Pascal Siakam"],[32,"Jayden","P","Jamal Murray"],[33,"Ross","P","Amen Thompson"],[34,"Matt","P","Ausar Thompson"],[35,"Pete","P","Evan Mobley"],[36,"Marto","P","Tyrese Haliburton"],[37,"Marto","P","Lauri Markkanen"],[38,"Pete","P","LaMelo Ball"],[39,"Matt","P","Chet Holmgren"],[40,"Ross","T","CLE"],[41,"Jayden","P","Domantas Sabonis"],[42,"Pat","P","Bam Adebayo"],[43,"Pat","P","Franz Wagner"],[44,"Jayden","P","LeBron James"],[45,"Ross","T","WAS"],[46,"Matt","P","Walker Kessler"],[47,"Pete","P","Josh Hart"],[48,"Marto","P","Kawhi Leonard"],[49,"Marto","T","DAL"],[50,"Pete","P","Dyson Daniels"],[51,"Matt","P","Rudy Gobert"],[52,"Ross","T","LAL"],[53,"Jayden","P","Tyrese Maxey"],[54,"Pat","T","ORL"]];
+// Banter tab content. Refreshed by Claude on request. Times are NZ time.
+const NEWS={
+ asOf:"2026-10-17",
+ top:{h:"NBA and the sportsbooks ban a stack of bet types after the betting scandals",
+  b:"Per Shams and ESPN's David Purdum: no more parlays on the under of the same player's stats, and no more 'first of' markets like who wins the opening tip. It comes off the back of the betting scandals that have hit the league.",
+  src:"Yahoo Sports",url:"https://sports.yahoo.com/nba/breaking-news/article/nba-sportsbooks-reportedly-agree-to-ban-certain-bets-including-parlays-involving-the-under-on-same-players-stats-151415255.html",date:"16 Oct"},
+ fans:[
+  {who:"Marto",team:"TOR",name:"Toronto Raptors",last:"46–36",
+   h:"Kawhi drops 21 in his first run as a Raptor",
+   b:"Kawhi Leonard had 21 points and 5 rebounds in his preseason debut as Toronto blew out the Knicks. Marto drafted him as his 6th man, so expect to hear about it.",
+   src:"NBA.com",url:"https://www.nba.com/news/starting-5-october-14-2026",
+   next:"vs Chicago Bulls (home)",when:"Thu 22 Oct, NZ time (tip time TBC)",
+   dig:"Kawhi healthy in October means nothing, mate. Ask him again in March."},
+  {who:"Ross",team:"GSW",name:"Golden State Warriors",last:"37–45",
+   h:"Porziņģis out indefinitely and seeing doctors",
+   b:"Kristaps Porziņģis has missed all of training camp and the preseason, and Steve Kerr says he's out indefinitely while he sees specialists about his health.",
+   src:"NBA.com",url:"https://www.nba.com/news/starting-5-october-15-2026",
+   next:"at Los Angeles Lakers",when:"Thu 22 Oct, 3:00pm NZ",
+   dig:"Your big man's out indefinitely before the season's even started. Classic Warriors."},
+  {who:"Pat",team:"ORL",name:"Orlando Magic",last:"45–37",
+   h:"New era under Sean Sweeney",
+   b:"The Magic hired Sean Sweeney, previously the Spurs' associate head coach, as the 16th head coach in franchise history. Franz Wagner, who Pat drafted, is the one to watch.",
+   src:"Sanford Herald",url:"https://www.mysanfordherald.com/article/3126,orlando-magic-name-sean-sweeney-head-coach",
+   next:"vs Atlanta Hawks (home)",when:"Thu 22 Oct, 12:00pm NZ",
+   dig:"Pat took the Magic with the very last pick of the draft. Fitting."},
+  {who:"Matt",team:"DAL",name:"Dallas Mavericks",last:"26–56",
+   h:"Kyrie due back after 20 months out, but the Mavs dropped one to the Pels",
+   b:"Kyrie Irving was set to return from his torn ACL during the preseason after missing all of last season. Dallas then lost 101–97 to New Orleans on Wednesday.",
+   src:"Roundtable / NBA.com",url:"https://www.nba.com/news/starting-5-october-15-2026",
+   next:"at Houston Rockets",when:"Thu 22 Oct, 1:30pm NZ",
+   dig:"The comp organiser's own team won 26 games last year. Glass house, Matt."},
+  {who:"Pete",team:"BOS",name:"Boston Celtics",last:"56–26",
+   h:"Celtics 3–0 in the preseason, Tatum looking sharp",
+   b:"Jayson Tatum had 19 points, 8 rebounds, 6 assists and 2 steals in a 114–93 win over Charlotte. Derrick White and Neemias Queta chipped in 33 between them.",
+   src:"NBA.com",url:"https://www.nba.com/news/starting-5-october-15-2026",
+   next:"at Detroit Pistons",when:"Wed 21 Oct, 8:00am NZ",
+   dig:"Undefeated in the preseason. Hang the banner, Pete."},
+  {who:"Jayden",team:"SAS",name:"San Antonio Spurs",last:"62–20",
+   h:"Wemby a record 93% pick of NBA GMs to start a franchise",
+   b:"After beating OKC in Game 7 of the West finals, the Spurs rolled Phoenix 123–103 in the preseason behind Wembanyama's 19 points and 4 blocks. GMs voted him their MVP favourite too.",
+   src:"RealGM / NBA.com",url:"https://basketball.realgm.com/nba/news",
+   next:"vs OKC Thunder (home), opening night",when:"Wed 21 Oct, 2:30pm NZ",
+   dig:"Your team's the best in the league and you still drafted Murray and LeBron."}
+ ]};
 const CATS=[
  {k:"wins",l:"Wins",sc:[5,3,1],desc:"Total regular-season wins across your three teams.",fmt:v=>v.toFixed(0)},
  {k:"mi",l:"Most Improved",sc:[5,3,1],desc:"Change in win % for your declared team on last season. If you declare none, your last team picked counts.",fmt:v=>(v>=0?"+":"")+(v*100).toFixed(1)+"%"},
@@ -236,7 +308,7 @@ function renderRules(){
   document.getElementById("ruleList").innerHTML=blocks.map(b=>`<div class="card"><div class="lbl" style="margin-top:0">${b[0]}</div><div class="big">${b[1]}</div><div><span class="pill" style="margin-top:6px">${b[2]}</span></div><p>${b[3]}</p></div>`).join("");
 }
 function showTab(t){
-  if(!["ladder","squads","categories","draft","rules"].includes(t))t="ladder";
+  if(!["ladder","squads","categories","draft","banter","rules"].includes(t))t="ladder";
   document.querySelectorAll("main section").forEach(s=>s.hidden=s.id!==t);
   document.querySelectorAll("nav.tabs a").forEach(a=>a.setAttribute("aria-current",a.dataset.tab===t?"true":"false"));
 }
@@ -257,5 +329,19 @@ function renderDraft(){
   }
   document.getElementById("draftList").innerHTML=html;
 }
-renderRules();renderDraft();render();
-</script></body></html>
+function renderBanter(){
+  const d=new Date(NEWS.asOf+"T12:00:00");
+  document.getElementById("banterNote").textContent=`News as of ${d.toLocaleDateString("en-NZ",{weekday:"long",day:"numeric",month:"long"})}. Each drafter's favourite team, their record and next game. Game times are NZ time.`;
+  const t=NEWS.top;
+  document.getElementById("topStory").innerHTML=`<div class="lbl">Top story · ${esc(t.date)}</div><h3>${esc(t.h)}</h3><p>${esc(t.b)}</p><a href="${t.url}" target="_blank" rel="noopener">Read it on ${esc(t.src)} →</a>`;
+  document.getElementById("fanList").innerHTML=NEWS.fans.map(f=>{
+    const live=LIVE&&LIVE.teams&&LIVE.teams[f.team];
+    const rec=live&&((live.w||0)+(live.l||0))?`${live.w}–${live.l}`:"0–0";
+    return `<div class="card fan"><h3>${esc(f.who)} <span>${esc(f.name)}</span></h3>
+    <div class="rec"><span class="pill">2026–27: ${rec}</span><span class="chip">Last season ${f.last}</span></div>
+    <h4>${esc(f.h)}</h4><p>${esc(f.b)}</p><a href="${f.url}" target="_blank" rel="noopener">${esc(f.src)} →</a>
+    <div class="next"><b>Next game: ${esc(f.next)}</b>${esc(f.when)}</div>
+    <p class="dig">${esc(f.dig)}</p></div>`;}).join("");
+}
+renderRules();renderDraft();renderBanter();render();
+</script><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script></body></html>
