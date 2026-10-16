@@ -202,11 +202,11 @@ const NEWS={
    dig:"Your team's the best in the league and you still drafted Murray and LeBron."}
  ]};
 const CATS=[
+ {k:"pts",l:"Points",sc:[3,2,1],desc:"Average points per game across your six players.",fmt:v=>v.toFixed(2),pl:1},
  {k:"wins",l:"Wins",sc:[5,3,1],desc:"Total regular-season wins across your three teams.",fmt:v=>v.toFixed(0)},
  {k:"mi",l:"Most Improved",sc:[5,3,1],desc:"Change in win % for your declared team on last season. If you declare none, your last team picked counts.",fmt:v=>(v>=0?"+":"")+(v*100).toFixed(1)+"%"},
  {k:"po",l:"Playoffs",sc:[5,3,1],desc:"Playoff points across your three teams: champion 10, conference winner 7, conference semi winner 5, first-round winner 3, made playoffs 1.",fmt:v=>v.toFixed(0),needPos:true},
  {k:"cup",l:"NBA Cup",sc:[3,1],desc:"NBA Cup points across your teams: winner 10, finals loser 7, semi-final loser 4.",fmt:v=>v.toFixed(0),needPos:true},
- {k:"pts",l:"Points",sc:[3,2,1],desc:"Average points per game across your six players.",fmt:v=>v.toFixed(2),pl:1},
  {k:"reb",l:"Rebounds",sc:[3,2,1],desc:"Average rebounds per game across your six players.",fmt:v=>v.toFixed(2),pl:1},
  {k:"ast",l:"Assists",sc:[3,2,1],desc:"Average assists per game across your six players.",fmt:v=>v.toFixed(2),pl:1},
  {k:"stl",l:"Steals",sc:[3,2,1],desc:"Average steals per game across your six players.",fmt:v=>v.toFixed(2),pl:1},
@@ -276,11 +276,11 @@ function render(){
   document.getElementById("squadList").innerHTML=SQUADS.map(d=>{
     const s=S.find(x=>x.n===d.n);
     const trows=s.teams.map(t=>`<tr><td class="l">${esc(t.name)}${t.a===d.mi?`<span class="mi" title="${d.dec?"Declared":"Last team picked"}">MI</span>`:""}<div class="tm">Pick ${t.pick} · last season ${t.last}–${82-t.last}</div></td><td>${t.proj?"<span class='tm'>proj </span>":""}${t.w}–${t.l}</td></tr>`).join("");
-    const prows=s.pl.map(p=>`<tr><td class="l"><span class="slot">${SLOTN[p.slot]}</span>${esc(p.name)} <span class="tm">${p.team}</span></td><td>${p.reb.toFixed(1)}</td><td>${p.ast.toFixed(1)}</td><td>${p.stl.toFixed(1)}</td><td>${p.blk.toFixed(1)}</td><td>${p.pts.toFixed(1)}</td></tr>`).join("");
+    const prows=s.pl.map(p=>`<tr><td class="l"><span class="slot">${SLOTN[p.slot]}</span>${esc(p.name)} <span class="tm">${p.team}</span></td><td>${p.pts.toFixed(1)}</td><td>${p.reb.toFixed(1)}</td><td>${p.ast.toFixed(1)}</td><td>${p.stl.toFixed(1)}</td><td>${p.blk.toFixed(1)}</td></tr>`).join("");
     return `<div class="card"><h3>${esc(d.n)} <span>${f1(s.total)} pts</span></h3>
       <div class="lbl">Teams</div><table><tr><th class="l">Team</th><th>${live?"W–L":"Proj W–L"}</th></tr>${trows}</table>
-      <div class="lbl">Players</div><div class="scroll"><table><tr><th class="l">Player</th><th>Reb</th><th>Ast</th><th>Stl</th><th>Blk</th><th>Pts</th></tr>${prows}
-      <tr class="avg"><td class="l">Average</td><td>${s.reb.toFixed(2)}</td><td>${s.ast.toFixed(2)}</td><td>${s.stl.toFixed(2)}</td><td>${s.blk.toFixed(2)}</td><td>${s.pts.toFixed(1)}</td></tr></table></div></div>`;
+      <div class="lbl">Players</div><div class="scroll"><table><tr><th class="l">Player</th><th>Pts</th><th>Reb</th><th>Ast</th><th>Stl</th><th>Blk</th></tr>${prows}
+      <tr class="avg"><td class="l">Average</td><td>${s.pts.toFixed(2)}</td><td>${s.reb.toFixed(2)}</td><td>${s.ast.toFixed(2)}</td><td>${s.stl.toFixed(2)}</td><td>${s.blk.toFixed(2)}</td></tr></table></div></div>`;
   }).join("");
   // categories
   document.getElementById("catList").innerHTML=CATS.map(c=>{
