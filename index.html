@@ -160,10 +160,9 @@ h2.sub2{font-size:22px;margin-top:4px}
 .mob{display:none}
 @media (max-width:900px){
  .dsk{display:none}.mob{display:block}
- .mrow{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin-bottom:8px}
+ .mrow{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin-bottom:10px}
  .mrow.lead{border-color:var(--accent)}
- .mrow summary{display:grid;grid-template-columns:28px auto 1fr auto;align-items:center;gap:10px;padding:12px 14px;list-style:none;cursor:pointer}
- .mrow summary::-webkit-details-marker{display:none}
+ .msum{display:grid;grid-template-columns:28px auto 1fr auto;align-items:center;gap:10px;padding:10px 14px 8px}
  .mpos{font-family:var(--display);font-weight:800;font-size:26px;color:var(--muted);text-align:center}
  .mrow.lead .mpos,.mrow.lead .mtot{color:var(--accent)}
  .mname{font-family:var(--display);font-weight:700;font-size:22px;text-transform:uppercase}
@@ -171,7 +170,7 @@ h2.sub2{font-size:22px;margin-top:4px}
  .mbar i{display:block;height:100%;border-radius:3px;background:var(--accent);opacity:.55}
  .mtot{font-family:var(--display);font-weight:800;font-size:30px;font-variant-numeric:tabular-nums}
  .mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:0 12px 12px}
- .mc{background:var(--bg);border-radius:8px;padding:6px 8px;display:flex;flex-direction:column}
+ .mc{background:var(--bg);border-radius:8px;padding:5px 8px;display:flex;flex-direction:column}
  .mc span{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
  .mc b{font-size:15px;font-variant-numeric:tabular-nums}
  .mc i{font-style:normal;font-size:12px;font-weight:700;color:var(--muted)}
@@ -428,8 +427,8 @@ function render(){
     if(mprev===null||Math.abs(s.total-mprev)>1e-9){mp=i+1;mprev=s.total;}
     const cells=OC.map(c=>{const r=R[c.k][s.n];const top=r.place===1&&r.pts>0;
       return `<div class="mc${r.pts>0?" hit":""}${top?" top":""}"><span>${c.s}</span><b>${c.fmt(s[c.k])}</b><i>${r.pts>0?"+"+f1(r.pts):"–"}</i></div>`;}).join("");
-    return `<details class="mrow${mp===1?" lead":""}"><summary><span class="mpos">${mp}</span><span class="mname">${esc(s.n)}</span><span class="mbar"><i style="width:${(s.total/maxT*100).toFixed(1)}%"></i></span><span class="mtot">${f1(s.total)}</span></summary><div class="mgrid">${cells}</div></details>`;
-  }).join("")+`<p class="mhint">Tap a name to see where the points come from.</p>`);
+    return `<div class="mrow${mp===1?" lead":""}"><div class="msum"><span class="mpos">${mp}</span><span class="mname">${esc(s.n)}</span><span class="mbar"><i style="width:${(s.total/maxT*100).toFixed(1)}%"></i></span><span class="mtot">${f1(s.total)}</span></div><div class="mgrid">${cells}</div></div>`;
+  }).join(""));
   wrapD("squadList",order.map(s=>{const d=SQUADS.find(x=>x.n===s.n);
     const teams=s.teams.map(t=>`<div class="mteam">${logo(t.a)}<small>${t.a===d.mi?`<span class="mi" style="margin:0">MI</span> `:""}${t.proj?`${f1(t.w)} W`:`${t.w}–${t.l}`}</small></div>`).join("");
     const pl=["PG","SG","SF","PF","C","SIXTH"].map(k=>{const p=s.pl.find(x=>x.slot===k);if(!p)return"";
