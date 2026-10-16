@@ -127,6 +127,35 @@ h2.sub2{font-size:22px;margin-top:4px}
 .lad.squads small.ln{word-spacing:4px}
 .lad.squads td.sq small{font-size:11.5px}
 @media (max-width:640px){.lad th,.lad td{padding:8px 7px}.lad .nm{font-size:18px}.lad .nm .pn{font-size:22px;width:24px}.lad .tot{min-width:64px}.lad .tot b{font-size:24px}}
+.lad td.c small{font-weight:600}
+.lad td.c.hit small{color:var(--ink)}
+.lad td.c.top small{color:var(--accent)}
+.lad td.c b{color:var(--ink)!important;font-size:15px}
+.lg{display:inline-flex;width:34px;height:34px;align-items:center;justify-content:center;flex:none;font-size:11px;font-weight:700;color:var(--muted)}
+.lg img{width:100%;height:100%;object-fit:contain}
+.lg.big{width:44px;height:44px}
+.tl{display:flex;align-items:center;gap:6px}
+.lad.squads td.sq.t b:empty{display:none}
+.lad.cats td.cat{font-size:18px}
+.lad.cats td.cat span{display:block;font-family:var(--body);font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.04em;text-transform:none}
+.lad.cats td.pl{text-align:left;min-width:110px}
+.lad.cats td.pl b{display:block;font-size:14px}
+.lad.cats td.pl small{display:flex;gap:8px;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.lad.cats td.pl .p{font-weight:700;color:var(--ink)}
+.lad.cats td.pl.top .p,.lad.cats td.pl.top b{color:var(--accent)}
+.lad.cats td.pl.top{background:color-mix(in srgb,var(--accent) 6%,var(--panel))}
+.lad tr.gh td{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);text-align:left;background:var(--bg);padding:6px 10px}
+.lad td.wr{white-space:normal;text-align:left;vertical-align:top}
+.lad.banter td{vertical-align:top}
+.lad.banter td.news{min-width:320px;max-width:460px}
+.lad.banter td.news b{display:block;font-size:14px;line-height:1.3}
+.lad.banter td.news p{margin:4px 0;font-size:13px;color:var(--muted);line-height:1.4}
+.lad.banter td.news a{font-size:12px;font-weight:600;color:var(--accent)}
+.lad.banter td.nx{min-width:150px;max-width:190px}
+.lad.banter td.nx b{display:block;font-size:13px}
+.lad.banter td.nx small{font-size:12px;color:var(--muted)}
+.lad.banter td.dig{min-width:200px;max-width:260px;font-style:italic;font-size:13px}
+.lad.banter td.sq b{display:block;font-family:var(--display);font-size:20px}
 footer{color:var(--muted);font-size:13px;padding-block:0 30px}
 @media (min-width:860px){.ladder{grid-template-columns:1fr 1fr}}
 @media (prefers-reduced-motion:no-preference){.row{transition:transform .15s}.row:hover{transform:translateY(-1px)}}
@@ -158,8 +187,8 @@ footer{color:var(--muted);font-size:13px;padding-block:0 30px}
   </section>
   <section id="categories" hidden>
     <h2>Categories</h2>
-    <p class="note">Every category, ranked. Player categories use the average across all six players, per game.</p>
-    <div class="grid" id="catList"></div>
+    <p class="note">Every category ranked first to sixth, in the same order as the ladder. Player categories use the per-game average across all six players.</p>
+    <div id="catList"></div>
   </section>
   <section id="draft" hidden>
     <h2>Draft picks</h2>
@@ -172,7 +201,7 @@ footer{color:var(--muted);font-size:13px;padding-block:0 30px}
     <p class="note" id="banterNote"></p>
     <div class="topstory" id="topStory"></div>
     <h2 class="sub2">The boys' teams</h2>
-    <div class="grid" id="fanList"></div>
+    <div id="fanList"></div>
   </section>
   <section id="rules" hidden>
     <h2>Points system</h2>
@@ -293,6 +322,8 @@ function ordered(){
   (cupDone?done:todo).push(by("cup"));(poDone?done:todo).push(by("po"));
   return [by("wins"),by("mi"),...done,...["pts","reb","ast","stl","blk"].map(by),...todo];
 }
+const TID={ATL:37,BOS:38,CLE:39,NOP:40,CHI:41,DAL:42,DEN:43,GSW:44,HOU:45,LAC:46,LAL:47,MIA:48,MIL:49,MIN:50,BKN:51,NYK:52,ORL:53,IND:54,PHI:55,PHX:56,POR:57,SAC:58,SAS:59,OKC:60,TOR:61,UTA:62,MEM:63,WAS:64,DET:65,CHA:66};
+const logo=(a,cls="")=>`<span class="lg ${cls}" title="${esc(NBA[a][0])}"><img src="https://cdn.nba.com/logos/nba/16106127${TID[a]}/primary/L/logo.svg" alt="${esc(NBA[a][0])}" loading="lazy" onerror="this.replaceWith(document.createTextNode('${a}'))"></span>`;
 const lastName=n=>{const p=n.split(" ");let l=p[p.length-1];if(/^(Jr\.?|Sr\.?|II|III|IV)$/.test(l))l=p[p.length-2];return l;};
 const nick=a=>{const n=NBA[a][0];return n==="Portland Trail Blazers"?"Trail Blazers":n.split(" ").pop();};
 function render(){
@@ -315,7 +346,7 @@ function render(){
     if(prev===null||Math.abs(s.total-prev)>1e-9){place=i+1;prev=s.total;}
     const cells=OC.map((c,ci)=>{const r=R[c.k][s.n];const top=r.place===1&&r.pts>0;
       const gStart=ci===0||OC[ci-1].g!==c.g;
-      return `<td class="c${r.pts>0?" hit":""}${top?" top":""}${gStart?" gs":""}"><b>${r.pts>0?"+"+f1(r.pts):"–"}</b><small>${c.fmt(s[c.k])}</small></td>`;}).join("");
+      return `<td class="c${r.pts>0?" hit":""}${top?" top":""}${gStart?" gs":""}"><b>${c.fmt(s[c.k])}</b><small>${r.pts>0?"+"+f1(r.pts)+" pts":"–"}</small></td>`;}).join("");
     return `<tr class="${place===1?"lead":""}"><td class="nm"><span class="pn">${place}</span>${esc(s.n)}</td><td class="tot"><b>${f1(s.total)}</b><span class="bar"><i style="width:${(s.total/maxT*100).toFixed(1)}%"></i></span></td>${cells}</tr>`;
   }).join("");
   document.getElementById("ladderList").innerHTML=`<div class="board"><table class="lad">
@@ -325,7 +356,7 @@ function render(){
   // squads: one row per drafter, teams then players
   const SL=["PG","SG","SF","PF","C","SIXTH"];
   const srows=order.map(s=>{const d=SQUADS.find(x=>x.n===s.n);
-    const tcells=s.teams.map(t=>`<td class="sq t${t===s.teams[0]?" gs":""}"><b>${esc(nick(t.a))}${t.a===d.mi?`<span class="mi" title="${d.dec?"Declared":"Last team picked"} Most Improved team">MI</span>`:""}</b><small>${t.proj?`proj ${f1(t.w)} W`:`${t.w}–${t.l}`}</small></td>`).join("");
+    const tcells=s.teams.map(t=>`<td class="sq t${t===s.teams[0]?" gs":""}"><div class="tl">${logo(t.a)}<div><b>${t.a===d.mi?`<span class="mi" style="margin:0" title="${d.dec?"Declared":"Last team picked"} Most Improved team">MI</span>`:""}</b><small>${t.proj?`proj ${f1(t.w)} W`:`${t.w}–${t.l}`}</small></div></div></td>`).join("");
     const pcells=SL.map((k,ki)=>{const p=s.pl.find(x=>x.slot===k);if(!p)return `<td class="sq${ki===0?" gs":""}">–</td>`;
       return `<td class="sq${ki===0?" gs":""}" title="${esc(p.name)}"><b>${esc(lastName(p.name))}</b><small class="ln">${[p.pts,p.reb,p.ast,p.stl,p.blk].map(v=>v.toFixed(1)).join(" ")}</small></td>`;}).join("");
     return `<tr><td class="nm">${esc(s.n)}</td>${tcells}${pcells}</tr>`;}).join("");
@@ -334,12 +365,14 @@ function render(){
    <tr><th class="nm">Drafter</th><th class="gs">Team 1</th><th>Team 2</th><th>Team 3</th>${["PG","SG","SF","PF","C","6th"].map((x,i)=>`<th class="${i===0?"gs":""}">${x}</th>`).join("")}</tr></thead>
    <tbody>${srows}</tbody></table></div>`;
   // categories
-  document.getElementById("catList").innerHTML=OC.map(c=>{
-    const rows=[...S].sort((a,b)=>b[c.k]-a[c.k]).map(s=>{const r=R[c.k][s.n];
+  const cgroups=[];OC.forEach(c=>{const g=cgroups[cgroups.length-1];if(g&&g.g===c.g)g.cs.push(c);else cgroups.push({g:c.g,cs:[c]});});
+  const crow=c=>{const ranked=[...S].sort((x,y)=>y[c.k]-x[c.k]);
+    return `<tr><td class="nm cat"><b>${c.l}</b><span>${c.sc.join(" / ")}</span></td>${ranked.map((s,i)=>{const r=R[c.k][s.n];
       const extra=c.k==="mi"?` <span class="tm">${s.miT.a}</span>`:"";
-      return `<tr class="${r.place===1&&r.pts>0?"lead":""}"><td class="l">${r.place}. ${esc(s.n)}${extra}</td><td>${c.fmt(s[c.k])}</td><td class="pts">${r.pts>0?"+"+f1(r.pts):""}</td></tr>`}).join("");
-    return `<div class="card cat"><h3>${c.l} <span>${c.sc.join(" / ")}</span></h3><table>${rows}</table></div>`;
-  }).join("");
+      return `<td class="pl${r.pts>0?" hit":""}${r.place===1&&r.pts>0?" top":""}${i===0?" gs":""}"><b>${esc(s.n)}${extra}</b><small><span class="v">${c.fmt(s[c.k])}</span>${r.pts>0?`<span class="p">+${f1(r.pts)}</span>`:""}</small></td>`;}).join("")}</tr>`;};
+  document.getElementById("catList").innerHTML=`<div class="board"><table class="lad cats">
+   <thead><tr><th class="nm">Category</th>${["1st","2nd","3rd","4th","5th","6th"].map((x,i)=>`<th class="${i===0?"gs":""}">${x}</th>`).join("")}</tr></thead>
+   <tbody>${cgroups.map(g=>`<tr class="gh"><td colspan="7">${g.g}</td></tr>`+g.cs.map(crow).join("")).join("")}</tbody></table></div>`;
 }
 function renderRules(){
   const blocks=[
@@ -381,14 +414,17 @@ function renderBanter(){
   document.getElementById("banterNote").textContent=`News as of ${d.toLocaleDateString("en-NZ",{weekday:"long",day:"numeric",month:"long"})}. Each drafter's favourite team, their record and next game. Game times are NZ time.`;
   const t=NEWS.top;
   document.getElementById("topStory").innerHTML=`<div class="lbl">Top story · ${esc(t.date)}</div><h3>${esc(t.h)}</h3><p>${esc(t.b)}</p><a href="${t.url}" target="_blank" rel="noopener">Read it on ${esc(t.src)} →</a>`;
-  document.getElementById("fanList").innerHTML=NEWS.fans.map(f=>{
+  const frows=NEWS.fans.map(f=>{
     const live=LIVE&&LIVE.teams&&LIVE.teams[f.team];
     const rec=live&&((live.w||0)+(live.l||0))?`${live.w}–${live.l}`:"0–0";
-    return `<div class="card fan"><h3>${esc(f.who)} <span>${esc(f.name)}</span></h3>
-    <div class="rec"><span class="pill">2026–27: ${rec}</span><span class="chip">Last season ${f.last}</span></div>
-    <h4>${esc(f.h)}</h4><p>${esc(f.b)}</p><a href="${f.url}" target="_blank" rel="noopener">${esc(f.src)} →</a>
-    <div class="next"><b>Next game: ${esc(f.next)}</b>${esc(f.when)}</div>
-    <p class="dig">${esc(f.dig)}</p></div>`;}).join("");
+    return `<tr><td class="nm">${esc(f.who)}</td>
+      <td class="sq gs"><div class="tl">${logo(f.team,"big")}<div><b>${rec}</b><small>Last season ${f.last}</small></div></div></td>
+      <td class="wr gs news"><b>${esc(f.h)}</b><p>${esc(f.b)}</p><a href="${f.url}" target="_blank" rel="noopener">${esc(f.src)} →</a></td>
+      <td class="wr gs nx"><b>${esc(f.next)}</b><small>${esc(f.when)}</small></td>
+      <td class="wr gs dig">${esc(f.dig)}</td></tr>`;}).join("");
+  document.getElementById("fanList").innerHTML=`<div class="board"><table class="lad banter">
+   <thead><tr><th class="nm">Drafter</th><th class="gs">Team</th><th class="gs">Latest</th><th class="gs">Next game (NZ)</th><th class="gs">The dig</th></tr></thead>
+   <tbody>${frows}</tbody></table></div>`;
 }
 renderRules();renderDraft();renderBanter();render();
 </script></body></html>
